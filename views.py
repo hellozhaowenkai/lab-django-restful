@@ -211,7 +211,14 @@ class APIViewSet(SingleObjectMixin, View):
 
         data = json.loads(request.body)
         new_object = self.model.objects.create(**kwargs)
-        new_object.update(**data)
+
+        try:
+            new_object.update(**data)
+        except Exception as error:
+            new_object.refresh_from_db()
+            new_object.delete()
+            raise error
+
         context = self.get_context_data(new_object)
         return OperationAPIResponse(context)
 
@@ -229,11 +236,20 @@ class APIViewSet(SingleObjectMixin, View):
 
         data = json.loads(request.body)
 
+        created = False
         try:
             target_object = self.get_object()
         except Http404:
             target_object = self.model.objects.create(**kwargs)
-        target_object.update(**data)
+            created = True
+
+        try:
+            target_object.update(**data)
+        except Exception as error:
+            if created:
+                target_object.refresh_from_db()
+                target_object.delete()
+            raise error
 
         context = self.get_context_data(target_object)
         return OperationAPIResponse(context)
