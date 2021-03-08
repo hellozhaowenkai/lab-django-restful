@@ -80,6 +80,9 @@ class APIViewSet(SingleObjectMixin, View):
             # Indicates which headers can be exposed as part of the response by listing their names.
             response["Access-Control-Expose-Headers"] = "true"
 
+            # Unlike `Simple Requests`, for `Preflighted Requests` the browser first sends an HTTP request
+            #   using the OPTIONS method to the resource on the other origin,
+            #   in order to determine if the actual request is safe to send.
             if request.method == "OPTIONS":
                 # Indicates how long the results of a preflight request can be cached.
                 response["Access-Control-Max-Age"] = "3600"
