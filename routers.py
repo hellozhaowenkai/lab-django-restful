@@ -7,11 +7,11 @@ class APIRouter:
     """
 
     list_actions = {
-        "get": "list",
+        "get": "fetch_list",
         "post": "create",
     }
     detail_actions = {
-        "get": "detail",
+        "get": "fetch_detail",
         "put": "update_or_create",
         "patch": "update",
         "delete": "drop",

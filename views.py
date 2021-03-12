@@ -178,7 +178,14 @@ class APIViewSet(SingleObjectMixin, View):
 
         return super().options(self, request, *args, **kwargs)
 
-    def list(self, request, *args, **kwargs):
+    def fetch_detail(self, request, *args, **kwargs):
+        """Return the current value of an object."""
+
+        target_object = self.get_object()
+        context = self.get_context_data(target_object)
+        return APIResponse(context)
+
+    def fetch_list(self, request, *args, **kwargs):
         """Return the current paginated collection value of multiple objects."""
 
         order_by = request.GET.get("order_by") or self.ordering
@@ -201,13 +208,6 @@ class APIViewSet(SingleObjectMixin, View):
         page = paginator.page(page_number)
         context = self.get_context_data(page.object_list)
         return CollectionAPIResponse(context, formatter_params={"page": page})
-
-    def detail(self, request, *args, **kwargs):
-        """Return the current value of an object."""
-
-        target_object = self.get_object()
-        context = self.get_context_data(target_object)
-        return APIResponse(context)
 
     def create(self, request, *args, **kwargs):
         """Create a new object based on the data provided, or submit a command."""
