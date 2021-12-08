@@ -4,6 +4,8 @@ from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.timezone import now
 
+from my_site.restful.models import OperationAPIState
+
 
 class APIEncoder(DjangoJSONEncoder):
     """
@@ -131,7 +133,7 @@ class OperationAPIResponse(APIResponse):
         created_at=None,
         last_action_at=None,
         percent_complete=100,
-        status="succeeded",
+        state=OperationAPIState.SUCCEEDED,
     ):
         response_data = {
             # The datetime when the operation was created.
@@ -140,8 +142,8 @@ class OperationAPIResponse(APIResponse):
             "last_action_at": last_action_at or now(),
             # Sometimes it is impossible for services to know with any accuracy when an operation will complete.
             "percent_complete": percent_complete,
-            # Operations MUST support the following states: [not_started | running | succeeded | failed].
-            "status": status,
+            # Operations MUST support the following states: [NOT_STARTED | RUNNING | SUCCEEDED | FAILED].
+            "state": state,
             # The result of the operation.
             **context,
         }

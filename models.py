@@ -5,6 +5,8 @@ from django.db.models.expressions import Combinable
 
 import uuid
 
+OperationAPIState = models.TextChoices("State", "NOT_STARTED RUNNING SUCCEEDED FAILED")
+
 
 class APICounterField(models.PositiveIntegerField):
     """
