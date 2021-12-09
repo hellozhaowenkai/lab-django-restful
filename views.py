@@ -2,6 +2,7 @@ from django.db import IntegrityError
 from django.core.paginator import InvalidPage, Paginator
 from django.http import Http404
 from django.core.exceptions import FieldError, ValidationError, MultipleObjectsReturned
+from django.db.models import ObjectDoesNotExist
 
 from django.http.request import validate_host
 from django.utils.decorators import method_decorator
@@ -145,7 +146,7 @@ class APIViewSet(SingleObjectMixin, View):
 
         try:
             response = super().dispatch(request, *args, **kwargs)
-        except Http404:
+        except (Http404, ObjectDoesNotExist):
             response = ErrorAPIResponse("100100")
             response.status_code = 404
         except MultipleObjectsReturned:
