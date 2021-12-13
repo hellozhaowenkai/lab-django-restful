@@ -76,6 +76,10 @@ class ErrorAPIResponse(APIResponse):
         "100201": "PermissionDenied: The user did not have permission to do that.",
         # PAGINATION
         "100300": "InvalidPage: The requested page is invalid (i.e. not an integer) or contains no objects.",
+        # COS
+        "100400": "Example: This is an example COS error message.",
+        # KRPANO
+        "100500": "Example: This is an example krpano error message.",
     }
 
     def formatter(self, code, message="", **kwargs):
