@@ -3,7 +3,24 @@ from django.core.exceptions import FieldError
 from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor
 from django.db.models.expressions import Combinable
 
+from functools import wraps
+
 import uuid
+
+
+def disable_for_loaddata(signal_handler):
+    """
+    Decorator that turns off signal handlers when loading fixture data.
+    """
+
+    @wraps(signal_handler)
+    def wrapper(*args, **kwargs):
+        if kwargs["raw"]:
+            return
+        signal_handler(*args, **kwargs)
+
+    return wrapper
+
 
 OperationAPIState = models.TextChoices("State", "NOT_STARTED RUNNING SUCCEEDED FAILED")
 
